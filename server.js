@@ -7,17 +7,30 @@ server.use(bodyParser.json());
 
 server.post('/users', (req, res) => {
     const name = req.body;
-    console.log(name);
-    knex.insert(name)
+    // console.log(name);
+    knex
+        .insert(name)
         .into('users')
-        .then( (ids) => {
-            console.log(ids)
-            res.status(201).json({ ids })
+        .then( function( tu ) {
+            console.log(tu);
+            res.status(201).json({ tu });
         })
-        .catch( () => {
-            res.status(500).json({ error: 'Could not insert into users' });
+        .catch((err) => {
+            res.status(500).json({ error: `Could not insert into users ${ err.message }` });
         })
 })
+
+server.get('/users', (req, res) => {
+    knex('users')
+    .then( function (allUser) {
+        res.status(200).json({ allUser })
+    })
+    .catch( function (err) {
+        res.status(500).json({ err });
+    })
+})
+
+
 
 
 const port = 3000;
